@@ -1,0 +1,51 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+    <h2>Simple Word Game</h2>
+    <div id="game"></div>
+    <script>
+        const model = {
+
+        };
+        init();
+
+        async function init() {
+            const response = await fetch('/api/game',
+                {
+                    method: 'POST'
+                });
+            const data = await response.json();
+            console.log(data);
+            model.game = data;
+            updateView();
+        }
+
+        async function guess(letter) {
+            const guess =
+            {
+                letter: letter,
+                id: model.game.id,
+            };
+            const response = await fetch('/api/game',
+                {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(guess)
+                });
+            const data = await response.text();
+            console.log(data);
+        }
+
+        function updateView() {
+            document.getElementById('game').innerHTML =
+                ''.padStart(model.game.wordLength, 'X');
+        }
+    </script>
+</body>
+</html>
